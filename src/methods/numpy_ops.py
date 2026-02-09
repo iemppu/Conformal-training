@@ -21,7 +21,10 @@ https://arxiv.org/abs/2002.08871
 This implementation follows the notation of the paper whenever possible.
 """
 
-from fast_soft_sort.third_party import isotonic
+from src.methods import isotonic
+
+#import isotonic
+
 import numpy as np
 from scipy import special
 

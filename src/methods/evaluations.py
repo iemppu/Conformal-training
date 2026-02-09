@@ -5,7 +5,7 @@ import random
 import torch
 import pandas as pd
 import numpy as np
-from conformal_learning import Splitconformal_CNN
+from src.methods import split_conformal
 
 seed = 666
 random.seed(seed)
@@ -249,7 +249,7 @@ def evaluation_conformal_full_realdata(test_loader, cal_loader, model, alpha, F_
     print('returning conformity scores...')
     easy_index = [i for i, j in enumerate(F_test) if float(j) == 0.0]
     hard_index = [i for i, j in enumerate(F_test) if float(j) == 1.0]
-    method_test = Splitconformal_CNN.SplitConformal()
+    method_test = split_conformal.SplitConformal()
     method_test.calibrate(test_loader, alpha = alpha, bbox = model, return_scores = return_scores_only)
     print(method_test.scores[easy_index])
     return(dict({'scores_0': method_test.scores[easy_index],
@@ -266,7 +266,7 @@ def evaluation_conformal_full_realdata(test_loader, cal_loader, model, alpha, F_
                 'y_true':y_true}))
 
   # calibrate the bbox
-  method = Splitconformal_CNN.SplitConformal()
+  method = split_conformal.SplitConformal()
   method.calibrate(cal_loader, alpha = alpha, bbox = model, no_calib=no_calib)
   # compute prediction set
   y_pred_S = method.predict(test_loader) 

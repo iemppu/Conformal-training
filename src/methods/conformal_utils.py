@@ -17,33 +17,31 @@ import copy
 import os 
 from tqdm.autonotebook import tqdm
 #from conformal_learning.resnet import ResNet18, ResNet34, ResNet50, ResNet101
-from conformal_learning.vgg import vgg16
-from conformal_learning.densenet import densenet
+from src.models.vgg import vgg16
+from src.models.densenet import densenet
 
-import pickle 
+import pickle
 import pdb
-from conformal_learning.utils import *
-from conformal_learning.help import *
+from src.utils.metrics import *
+from src.methods.scores import *
 
-from conformal_learning.losses import LDAMLoss, FocalLoss
+from src.methods.losses import LDAMLoss, FocalLoss
 from torch.utils.data.distributed import DistributedSampler
-from conformal_learning.resnet import resnet
-from conformal_learning.vgg import vgg16, vgg19_bn
-from conformal_learning.densenet import densenet
+from src.models.resnet import resnet
+from src.models.vgg import vgg16, vgg19_bn
+from src.models.densenet import densenet
 
-from conformal_learning.sorting_nets import comm_pattern_batcher
-from conformal_learning.variational_sorting_net import VariationalSortingNet
-from conformal_learning.help import get_sos
-from conformal_learning.smooth_conformal_prediction import smooth_aps_score, smooth_aps_score_all
+from src.methods.sorting_nets import comm_pattern_batcher
+from src.methods.variational_sorting_net import VariationalSortingNet
+from src.methods.scores import get_sos
+from src.methods.smooth_conformal import smooth_aps_score, smooth_aps_score_all
 
-from train.cifar100ManualData import load_cifar100
-from train.Cal101ManualData import load_caltech101
-from train.iNaturalistManualData import load_inaturalist
+from src.data.cifar100 import load_cifar100
 
 import jax
 import gc
 import os
-os.environ['JAX_NUMPY_DTYPE_PROMOTION'] = 'relaxed'
+# os.environ['JAX_NUMPY_DTYPE_PROMOTION'] = 'relaxed'  # removed: deprecated in newer JAX
 os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"]="false"
 os.environ["XLA_PYTHON_CLIENT_MEM_FRACTION"]="0.3"
 os.environ["XLA_PYTHON_CLIENT_ALLOCATOR"]="platform"

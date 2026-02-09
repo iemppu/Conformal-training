@@ -35,10 +35,10 @@ import numpy as np
 
 import torch
 
-from conformal_learning import variational_sorting_net
+from src.methods import variational_sorting_net
 
 import os
-os.environ['JAX_NUMPY_DTYPE_PROMOTION'] = 'relaxed'
+# os.environ['JAX_NUMPY_DTYPE_PROMOTION'] = 'relaxed'  # removed: deprecated in newer JAX
 os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"]="false"
 os.environ["XLA_PYTHON_CLIENT_MEM_FRACTION"]="0.3"
 os.environ["XLA_PYTHON_CLIENT_ALLOCATOR"]="platform"

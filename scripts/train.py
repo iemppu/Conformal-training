@@ -26,21 +26,22 @@ import sys
 from sklearn.model_selection import train_test_split
 import seaborn as sns
 import math
+import copy
 
-import parser_file
-from cifar100ManualData import load_cifar100
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-sys.path.insert(0, './')
+from src.utils import config as parser_file
+from src.data.cifar100 import load_cifar100
 
-from conformal_learning.losses import LDAMLoss, FocalLoss
+from src.methods.losses import LDAMLoss, FocalLoss
 
 
-from conformal_learning.utils import evaluate_predictions, get_scores_HPS, get_scores, classwise_conformal, Marginal_conformal
-from conformal_learning import black_boxes_CNN
-from conformal_learning.utils import *
-from conformal_learning.help import *
-from conformal_learning.black_boxes_CNN import Estimate_quantile_n, Scores_RAPS_all_diff, Scores_APS_all_diff, Scores_HPS_all_diff, PinballMarginal, UniformMatchingLoss, Estimate_size_loss_RAPS, save_plot, find_scores_RAPS, find_scores_APS, find_scores_HPS, load_train_objs, base_path_for_finetune, load_checkpoint, prepare_dataloader, loss_fnc, check_path, create_final_data, create_folder, test_model, loss_cal, create_optimizers
-from conformal_learning.smooth_conformal_prediction import smooth_aps_score, smooth_aps_score_all
+from src.utils.metrics import evaluate_predictions, get_scores_HPS, get_scores, classwise_conformal, Marginal_conformal
+from src.methods import conformal_utils as black_boxes_CNN
+from src.utils.metrics import *
+from src.methods.scores import *
+from src.methods.conformal_utils import Estimate_quantile_n, Scores_RAPS_all_diff, Scores_APS_all_diff, Scores_HPS_all_diff, PinballMarginal, UniformMatchingLoss, Estimate_size_loss_RAPS, save_plot, find_scores_RAPS, find_scores_APS, find_scores_HPS, load_train_objs, base_path_for_finetune, load_checkpoint, prepare_dataloader, loss_fnc, check_path, create_final_data, create_folder, test_model, loss_cal, create_optimizers
+from src.methods.smooth_conformal import smooth_aps_score, smooth_aps_score_all
 
 
 date = date.today().strftime("%m-%d-%Y")
@@ -48,7 +49,7 @@ date = date.today().strftime("%m-%d-%Y")
 import jax
 # rng = jax.random.PRNGKey(42) 
 import os
-os.environ['JAX_NUMPY_DTYPE_PROMOTION'] = 'relaxed'
+# os.environ['JAX_NUMPY_DTYPE_PROMOTION'] = 'relaxed'  # removed: deprecated in newer JAX
 os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"]="false"
 os.environ["XLA_PYTHON_CLIENT_MEM_FRACTION"]="0.3"
 os.environ["XLA_PYTHON_CLIENT_ALLOCATOR"]="platform"

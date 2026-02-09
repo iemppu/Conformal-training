@@ -22,29 +22,32 @@ Mathieu Blondel, Olivier Teboul, Quentin Berthet, Josip Djolonga
 https://arxiv.org/abs/2002.08871
 """
 
-from . import numpy_ops
+from src.methods import numpy_ops
+
+#import numpy_ops
+
 import torch
 
-sys.path.insert(0, './')
 
-import parser_file
+from src.utils import config as parser_file
 parser = argparse.ArgumentParser(add_help=False)
 
 parser_from_file = parser_file.initialize(parser)
 
-args = parser_from_file.parse_args()
+args, _ = parser_from_file.parse_known_args()
 
 #print(args)
 
 device = torch.device('cuda:{}'.format(args.num_device) if torch.cuda.is_available() else 'cpu')
 
-print(f'device ops = {device}')
+#print(f'device ops = {device}')
 
 
 
 
-def wrap_class(cls, **kwargs):
+def wrap_class(cls, device, **kwargs):
   """Wraps the given NumpyOp in a torch Function."""
+  
 
   class NumpyOpWrapper(torch.autograd.Function):
     """A torch Function wrapping a NumpyOp."""
@@ -67,56 +70,59 @@ def map_tensor(map_fn, tensor):
   return torch.stack([map_fn(tensor_i) for tensor_i in torch.unbind(tensor)])
 
 
-def soft_rank(values, direction="ASCENDING", regularization_strength=1.0,
+def soft_rank(values, device, direction="ASCENDING", regularization_strength=1.0,
               regularization="l2"):
-  r"""Soft rank the given values (tensor) along the second axis.
+
+  """Soft rank the given values (tensor) along the second axis.
 
   The regularization strength determines how close are the returned values
   to the actual ranks.
 
   Args:
-    values: A 2d-tensor holding the numbers to be ranked.
+    values: A 2D tensor holding the numbers to be ranked.
     direction: Either 'ASCENDING' or 'DESCENDING'.
     regularization_strength: The regularization strength to be used. The smaller
     this number, the closer the values to the true ranks.
     regularization: Which regularization method to use. It
       must be set to one of ("l2", "kl", "log_kl").
   Returns:
-    A 2d-tensor, soft-ranked along the second axis.
+    A 2D tensor, soft-ranked along the second axis.
   """
   if len(values.shape) != 2:
-    raise ValueError("'values' should be a 2d-tensor "
+    raise ValueError("'values' should be a 2D tensor "
                      "but got %r." % values.shape)
 
-  wrapped_fn = wrap_class(numpy_ops.SoftRank,
+  wrapped_fn = wrap_class(numpy_ops.SoftRank, device = device, 
                           regularization_strength=regularization_strength,
                           direction=direction,
                           regularization=regularization)
   return map_tensor(wrapped_fn.apply, values)
 
 
-def soft_sort(values, direction="ASCENDING",
+def soft_sort(values, device, direction="ASCENDING",
               regularization_strength=1.0, regularization="l2"):
-  r"""Soft sort the given values (tensor) along the second axis.
+  
+
+  """Soft sort the given values (tensor) along the second axis.
 
   The regularization strength determines how close are the returned values
   to the actual sorted values.
 
   Args:
-    values: A 2d-tensor holding the numbers to be sorted.
+    values: A 2D tensor holding the numbers to be sorted.
     direction: Either 'ASCENDING' or 'DESCENDING'.
     regularization_strength: The regularization strength to be used. The smaller
     this number, the closer the values to the true sorted values.
     regularization: Which regularization method to use. It
       must be set to one of ("l2", "log_kl").
   Returns:
-    A 2d-tensor, soft-sorted along the second axis.
+    A 2D tensor, soft-sorted along the second axis.
   """
   if len(values.shape) != 2:
-    raise ValueError("'values' should be a 2d-tensor "
+    raise ValueError("'values' should be a 2D tensor "
                      "but got %s." % str(values.shape))
 
-  wrapped_fn = wrap_class(numpy_ops.SoftSort,
+  wrapped_fn = wrap_class(numpy_ops.SoftSort, device = device, 
                           regularization_strength=regularization_strength,
                           direction=direction,
                           regularization=regularization)

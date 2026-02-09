@@ -19,13 +19,13 @@ from tqdm.autonotebook import tqdm
 #from conformal_learning.resnet import ResNet18, ResNet34, ResNet50, ResNet101
 import pickle 
 import pdb
-from conformal_learning.utils import *
-from conformal_learning.losses import LDAMLoss, FocalLoss
+from src.utils.metrics import *
+from src.methods.losses import LDAMLoss, FocalLoss
 import argparse
-from conformal_learning.pytorch_ops import soft_rank, soft_sort
-from conformal_learning.sorting_nets import comm_pattern_batcher
-from conformal_learning.variational_sorting_net import VariationalSortingNet
-from conformal_learning.smooth_conformal_prediction import smooth_aps_score, smooth_aps_score_all
+from src.methods.pytorch_ops import soft_rank, soft_sort
+from src.methods.sorting_nets import comm_pattern_batcher
+from src.methods.variational_sorting_net import VariationalSortingNet
+from src.methods.smooth_conformal import smooth_aps_score, smooth_aps_score_all
 
 #import parser_file
 
@@ -38,7 +38,7 @@ import jax
 # rng = jax.random.PRNGKey(42) 
 
 import os
-os.environ['JAX_NUMPY_DTYPE_PROMOTION'] = 'relaxed'
+# os.environ['JAX_NUMPY_DTYPE_PROMOTION'] = 'relaxed'  # removed: deprecated in newer JAX
 os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"]="false"
 os.environ["XLA_PYTHON_CLIENT_MEM_FRACTION"]="0.3"
 os.environ["XLA_PYTHON_CLIENT_ALLOCATOR"]="platform"
